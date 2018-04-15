@@ -33,6 +33,7 @@ namespace MailSender
             try
             {
                 doc.SaveAs(FileName: Path.GetFullPath(savePath), FileFormat: Word.WdSaveFormat.wdFormatPDF);
+                doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
             }
             catch
             {

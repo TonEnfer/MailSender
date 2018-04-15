@@ -12,25 +12,46 @@ namespace MailSender
         static void Main(string[] args)
         {
             FileConverter fc = new FileConverter();
-            //fc.Convert("..//..//..//Рассылка//Информационное письмо.docx",
-            //    "..//..//..//Рассылка//Информационное письмо.pdf");
-            //fc.Free();
             MailVariable mv = new MailVariable();
-            
+            MailVariable.Reader mvr;
+
+
             try
             {
-                MailVariable.Reader mvr = new MailVariable.Reader("..//..//..//Рассылка//Список-1.xlsx");
+                Console.WriteLine("Чтение параметров из Excel...");
+                mvr = new MailVariable.Reader("..//..//..//Рассылка//Список-1.xlsx");
                 mv.AddVariables(mvr.ReadVariable());
-
+                Console.WriteLine("Параметры прочитаны!");
+                Console.WriteLine("Создание файлов...");
                 foreach (var k in mv.GetVariables())
                 {
-                    Console.Write("{0}\t{1}\t{2}\t", k.number, k.organization, k.fullName);
-                    foreach (var s in k.email.ToArray())
-                    {
-                        Console.Write("{0}\t", s);
-                    }
-                    Console.WriteLine();
+                    List<MsgFileBilder.TextParameters> textParameters =
+                        new List<MsgFileBilder.TextParameters>();
+                    textParameters.Add(new MsgFileBilder.TextParameters("Organization", k.organization));
+                    string io = k.fullName.Split(' ')[1].First() +
+                        (string)". " + k.fullName.Split(' ')[2].First() + (string)". ";
+                    string shName = io + (string)Declator.Decline(k.fullName, NameCaseLib.NCL.Padeg.DATELN).Split(' ')[0];
+                    textParameters.Add(new MsgFileBilder.TextParameters("ShortName", shName));
+                    textParameters.Add(new MsgFileBilder.TextParameters("CurrentDate", 
+                        DateTime.Now.Date.ToShortDateString()));
+                    textParameters.Add(new MsgFileBilder.TextParameters("MsgNumber",
+                        k.number.ToString()));
+                    textParameters.Add(new MsgFileBilder.TextParameters("Appeal",
+                        Declator.getSex(k.fullName) == NameCaseLib.NCL.Gender.Man ? "Уважаемый" : "Уважаемая"));
+                    textParameters.Add(new MsgFileBilder.TextParameters("LongName", k.fullName.Split(' ')[1] +
+                        (string)" " + k.fullName.Split(' ')[2]));
+                    MsgFileBilder.Build(textParameters, "..\\..\\..\\Рассылка\\Информационное письмо.docx");
+                    
                 }
+                Console.WriteLine("Файлы созданы!");
+                Console.WriteLine("Конвертация файлов...");
+                foreach (var k in mv.GetVariables())
+                {
+                    string inputFile = "..\\..\\..\\Рассылка\\Информационное письмо" + "-" + k.number + ".docx";
+                    string outputFile = "..\\..\\..\\Рассылка\\Информационное письмо" + "-" + k.number + ".pdf";
+                    fc.Convert(inputFile, outputFile);
+                }
+                Console.WriteLine("Файлы сконвертированы...");
             }
             catch { }
 

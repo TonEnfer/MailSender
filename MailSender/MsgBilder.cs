@@ -4,33 +4,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using TemplateEngine.Docx;
+using System.Linq.Expressions;
+
 namespace MailSender
 {
     public static class MsgFileBilder
     {
-        struct Parameters
+        public struct TextParameters
         {
-            string name;
-            string value;
+            public string name;
+            public string value;
+            public TextParameters(string name, string value)
+            {
+                this.value = value;
+                this.name = name;
+            }
         }
 
-        static void Build(Parameters[] param, string patch) {
+        public static void Build(List<TextParameters> param, string templatePath)
+        {
+            var valuesToFill = new Content();
+            foreach (var ppp in param)
+            {
+                FieldContent f = new FieldContent(ppp.name, ppp.value);
+                valuesToFill.Fields.Add(f);
+            }
+            string number = "-" + (from n in param where n.name == "MsgNumber" select n.value).First();
+            string p = templatePath.Remove(templatePath.Length - 5) + number +
+                ".docx";
+            try
+            {
+                File.Copy(templatePath, p);
 
-            throw new InvalidArgumentFormat();
+                using (var outputDocument = new TemplateProcessor(p)
+                    .SetRemoveContentControls(true))
+                {
+                    outputDocument.FillContent(valuesToFill);
+                    outputDocument.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
-    }
-
-    [Serializable()]
-    public class InvalidArgumentFormat : System.ArgumentException
-    {
-        public InvalidArgumentFormat() : base() { }
-        public InvalidArgumentFormat(string message) : base(message) { }
-        public InvalidArgumentFormat(string message, System.Exception inner) : base(message, inner) { }
-
-        // A constructor is needed for serialization when an
-        // exception propagates from a remoting server to the client. 
-        protected InvalidArgumentFormat(System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context)
-        { }
     }
 }

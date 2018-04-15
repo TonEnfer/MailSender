@@ -18,5 +18,12 @@ namespace MailSender
             String tmp = nc.Q(FullName, padeg);
             return tmp;
         }
+
+        public static Gender getSex(string fullName)
+        {
+            nc.FullReset();
+            Decline(fullName, Padeg.IMENITLN);
+            return nc.GenderAutoDetect();
+        }
     }
 }
