@@ -41,19 +41,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NameCaseLib\Core\Core.cs" />
+    <Compile Include="NameCaseLib\Core\LastCache.cs" />
+    <Compile Include="NameCaseLib\Core\Str.cs" />
+    <Compile Include="NameCaseLib\Core\Word.cs" />
+    <Compile Include="NameCaseLib\Core\WordArray.cs" />
     <Compile Include="Declator.cs" />
     <Compile Include="MsgBilder.cs" />
+    <Compile Include="NameCaseLib\NCL\Gender.cs" />
+    <Compile Include="NameCaseLib\NCL\GenderProbability.cs" />
+    <Compile Include="NameCaseLib\NCL\LettersMask.cs" />
+    <Compile Include="NameCaseLib\NCL\NamePart.cs" />
+    <Compile Include="NameCaseLib\NCL\Padeg.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NameCaseLib\Ru.cs" />
+    <Compile Include="NameCaseLib\Ua.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NameCaseLib\NameCaseLib.csproj">
-      <Project>{ad959283-7562-491c-a23a-c94f96b6c6f2}</Project>
-      <Name>NameCaseLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

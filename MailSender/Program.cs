@@ -11,7 +11,8 @@ namespace MailSender
         static void Main(string[] args)
         {
             String a = Declator.Decline("Иванов Иван Иванович", NameCaseLib.NCL.Padeg.RODITLN);
-            System.Console
+            System.Console.WriteLine(a);
+            Console.ReadKey();
         }
     }
 }
