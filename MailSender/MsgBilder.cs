@@ -24,6 +24,11 @@ namespace MailSender
 
         public static void Build(List<TextParameters> param, string templatePath)
         {
+            string saveDir = Path.GetDirectoryName(templatePath) + "\\Generated";
+            if (!Directory.Exists(saveDir))
+            {
+                Directory.CreateDirectory(saveDir);
+            }
             if (Path.GetExtension(templatePath) == ".txt")
             {
                 string text = Encoding.Default.GetString(File.ReadAllBytes(templatePath));
@@ -34,11 +39,12 @@ namespace MailSender
                         text = text.Replace("{"+ ppp.name + "}",ppp.value);
                     }
                 }
-                string number = "-" + 
-                    (from n in param where n.name == "MsgNumber" select n.value).First();
-                string p = templatePath.Remove(templatePath.Length - 4) + number +
-                    ".txt";
-                File.WriteAllText(p,text);
+                
+                
+                string newFilePath = saveDir + "\\" + Path.GetFileNameWithoutExtension(templatePath) + "-" +
+                    (from n in param where n.name == "MsgNumber" select n.value).First() + ".txt";
+                
+                File.WriteAllText(newFilePath, text);
             }
             else if (Path.GetExtension(templatePath) == ".docx")
             {
@@ -48,14 +54,14 @@ namespace MailSender
                     FieldContent f = new FieldContent(ppp.name, ppp.value);
                     valuesToFill.Fields.Add(f);
                 }
-                string number = "-" + (from n in param where n.name == "MsgNumber" select n.value).First();
-                string p = templatePath.Remove(templatePath.Length - 5) + number +
-                    ".docx";
+                string newFilePath = saveDir + "\\" + Path.GetFileNameWithoutExtension(templatePath) + "-" +
+                    (from n in param where n.name == "MsgNumber" select n.value).First() + ".docx";
+
                 try
                 {
-                    File.Copy(templatePath, p);
+                    File.Copy(templatePath, newFilePath);
 
-                    using (var outputDocument = new TemplateProcessor(p)
+                    using (var outputDocument = new TemplateProcessor(newFilePath)
                         .SetRemoveContentControls(true))
                     {
                         outputDocument.FillContent(valuesToFill);

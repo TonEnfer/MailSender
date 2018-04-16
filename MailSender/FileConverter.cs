@@ -14,8 +14,10 @@ namespace MailSender
 
         public FileConverter()
         {
-            WordApp = new Word.Application();
-            WordApp.Visible = false;
+            WordApp = new Word.Application
+            {
+                Visible = false
+            };
         }
 
         public void Convert(string openPath, string savePath)
@@ -38,15 +40,15 @@ namespace MailSender
             catch
             {
                 Console.WriteLine("Не смог сохранить файл {0}", savePath);
+                
+            }
+            finally
+            {
+                if (WordApp.Documents != null)
+                    WordApp.Documents.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
                 WordApp.Quit();
             }
 
-        }
-        public void Free()
-        {
-            if (WordApp.Documents != null)
-                WordApp.Documents.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-            WordApp.Quit();
         }
     }
 }
