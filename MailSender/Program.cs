@@ -41,7 +41,8 @@ namespace MailSender
                     textParameters.Add(new MsgFileBilder.TextParameters("LongName", k.fullName.Split(' ')[1] +
                         (string)" " + k.fullName.Split(' ')[2]));
                     MsgFileBilder.Build(textParameters, "..\\..\\..\\Рассылка\\Информационное письмо.docx");
-                    
+                    MsgFileBilder.Build(textParameters, "..\\..\\..\\Рассылка\\Текст письма.txt");
+                    GC.Collect();
                 }
                 Console.WriteLine("Файлы созданы!");
                 Console.WriteLine("Конвертация файлов...");
@@ -50,14 +51,11 @@ namespace MailSender
                     string inputFile = "..\\..\\..\\Рассылка\\Информационное письмо" + "-" + k.number + ".docx";
                     string outputFile = "..\\..\\..\\Рассылка\\Информационное письмо" + "-" + k.number + ".pdf";
                     fc.Convert(inputFile, outputFile);
+                   // GC.Collect();
                 }
-                Console.WriteLine("Файлы сконвертированы...");
+                Console.WriteLine("Файлы сконвертированы!");
             }
             catch { }
-
-
-            String a = Declator.Decline("Иванов Иван Иванович", NameCaseLib.NCL.Padeg.RODITLN);
-            System.Console.WriteLine(a);
             Console.ReadKey();
         }
     }
